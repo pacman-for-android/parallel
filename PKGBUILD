@@ -4,7 +4,7 @@
 
 pkgname=parallel
 pkgver=20120222
-pkgrel=1
+pkgrel=2
 pkgdesc='A shell tool for executing jobs in parallel'
 arch=('any')
 url='http://www.gnu.org/software/parallel/'
