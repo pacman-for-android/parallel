@@ -7,7 +7,7 @@
 pkgbase=parallel
 pkgname=('parallel' 'parallel-docs')
 pkgver=20230822
-pkgrel=1
+pkgrel=1.2
 pkgdesc='A shell tool for executing jobs in parallel'
 arch=('any')
 url='https://www.gnu.org/software/parallel/'
@@ -34,8 +34,12 @@ prepare() {
 
 build() {
   cd "$pkgbase-$pkgver"
-
-  ./configure --prefix=/usr
+  sed -i '1s|.*|#!/data/usr/bin/env perl|' src/{parallel,sem}
+  sed -i '1s|.*|#!/data/usr/bin/perl -w|' src/{niceload,sql}
+  sed -i '1s|.*|#!/data/usr/bin/perl|' src/{parcat,parsort}
+  sed -i '1s|.*|#!/data/usr/bin/env bash|' src/parset
+  sed -i '1s|#!/usr/bin/env |#!/data/usr/bin/env |' src/env_parallel{,.*sh}
+  ./configure --prefix=/data/usr
 
   make
 }
@@ -49,7 +53,7 @@ package_parallel() {
   make DESTDIR="$pkgdir" install
 
   # split documentation out of main package
-  mv "$pkgdir/usr/share/doc" docs
+  mv "$pkgdir/data/usr/share/doc" docs
 }
 
 package_parallel-docs() {
@@ -57,8 +61,8 @@ package_parallel-docs() {
 
   cd "$pkgbase-$pkgver"
 
-  install -vd "$pkgdir/usr/share/doc"
-  mv -v docs/* "$pkgdir/usr/share/doc"
+  install -vd "$pkgdir/data/usr/share/doc"
+  mv -v docs/* "$pkgdir/data/usr/share/doc"
 }
 
 # vim:set ts=2 sw=2 et:
